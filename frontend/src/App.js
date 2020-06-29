@@ -1,17 +1,18 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { makeStyles } from "@material-ui/core/styles";
+import NamePopup from "./components/NamePopup";
+import Header from "./components/Header";
 import Chat from "./components/Chat";
 import Navbar from "./components/Navbar";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   paper: {
     display: "flex",
     width: "100%",
-    margin: theme.spacing(1),
   },
   container: {
     display: "flex",
@@ -24,12 +25,16 @@ const App = observer(({ Store }) => {
 
   return (
     <Container maxWidth="xl" className={classes.container}>
-      <Paper className={classes.paper} elevation={0} variant="outlined">
-        <Grid container>
-          <Grid container xs={2}>
+      {Store.namePopupShow && <NamePopup />}
+      <Paper className={classes.paper} square elevation={0}>
+        <Grid container direction="row">
+          <Grid item style={{ height: "48px" }} xs={12}>
+            <Header />
+          </Grid>
+          <Grid item style={{ height: "calc(100% - 48px)" }} xs={2}>
             <Navbar />
           </Grid>
-          <Grid container xs={10}>
+          <Grid item style={{ height: "calc(100% - 48px)" }} xs={10}>
             <Chat />
           </Grid>
         </Grid>

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { inject, observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -10,18 +10,16 @@ const ws = new WebSocket(URL);
 
 const Chat = observer(({ Store }) => {
   const divRef = useRef(null);
-  const [name, setName] = useState("Bob");
   //const [ws, setWs] = useState(new WebSocket(URL));
 
   useEffect(() => {
     ws.onopen = () => {
       // on connecting, do nothing but log it to the console
       console.log("connected");
+
+      // auto join room1
+      Store.changeRoom(1);
     };
-    Store.changeRoom("room1");
-    if (!Store.messages[Store.currentRoom]) {
-      Store.messages[Store.currentRoom] = [];
-    }
   });
 
   useEffect(() => {
@@ -30,32 +28,27 @@ const Chat = observer(({ Store }) => {
       const receivingMessage = JSON.parse(e.data);
       Store.addMessage(receivingMessage);
     };
+
+    // each time new message arrives scrools down automaticly to bottom of chat
     divRef.current.scrollIntoView({ block: "end", behavior: "smooth" });
   });
 
   const submitMessage = (messageString) => {
-    // on submitting the ChatInput form, send the message, add it to the list and reset the input
-    const message = { name: name, message: messageString };
-    ws.send(JSON.stringify(message));
-    Store.addMessage(message);
+    if (messageString) {
+      const instantMessage = {};
+      const message = { name: Store.nickName, message: messageString };
+      instantMessage[Store.currentRoom] = [message];
+      ws.send(JSON.stringify(instantMessage));
+      Store.addMessage(instantMessage);
+    }
   };
 
   return (
-    <Grid container direction="column" style={{ flexWrap: "nowrap" }}>
-      <Grid item>
-        <Paper variant="outlined">
-          <label htmlFor="name">
-            Name:&nbsp;
-            <input
-              type="text"
-              id={"name"}
-              placeholder={"Enter your name..."}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-        </Paper>
-      </Grid>
+    <Grid
+      container
+      direction="column"
+      style={{ height: "100%", flexWrap: "nowrap" }}
+    >
       <Grid
         item
         style={{
@@ -70,7 +63,6 @@ const Chat = observer(({ Store }) => {
             display: "table",
           }}
           elevation={0}
-          variant="outlined"
         >
           <div
             style={{
@@ -79,14 +71,14 @@ const Chat = observer(({ Store }) => {
             }}
             ref={divRef}
           >
-            {/* {Store.messages[Store.currentRoom].map((m, index) => (
+            {Store.messages[Store.currentRoom]?.map((m, index) => (
               <ChatMessage key={index} message={m.message} name={m.name} />
-            ))} */}
+            ))}
           </div>
         </Paper>
       </Grid>
       <Grid item>
-        <Paper variant="outlined">
+        <Paper square style={{ paddingTop: "10px", paddingBottom: "10px" }}>
           <ChatInput
             ws={ws}
             onSubmitMessage={(messageString) => submitMessage(messageString)}

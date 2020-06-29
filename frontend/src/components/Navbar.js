@@ -1,40 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import { inject, observer } from "mobx-react";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Hidden from "@material-ui/core/Hidden";
+
+const useStyles = makeStyles((theme) => ({
+  selected: {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+  },
+}));
 
 const Navbar = observer(({ Store }) => {
-  const [rooms, setRooms] = useState([
-    { roomName: "room1", roomId: "room1" },
-    { roomName: "room2", roomId: "room2" },
-    { roomName: "room3", roomId: "room3" },
-  ]);
-  const [newRoom, setNewRoom] = useState("");
-
-  const addRoom = (name) => {
-    const newRooms = rooms;
-    newRooms.push({ roomName: name, roomId: 4 });
-    setRooms(newRooms);
-  };
-
-  const changeRoom = (id) => {
-    if (!Store.messages[id]) {
-      Store.messages[id] = [];
-    }
-    Store.changeRoom(id);
-  };
+  // const [newRoom, setNewRoom] = useState("");
+  const classes = useStyles();
 
   return (
-    <Grid container direction="column" style={{ flexWrap: "nowrap" }}>
-      <Grid item>
-        <Paper variant="outlined">
+    <Grid
+      container
+      direction="column"
+      style={{ height: "100%", flexWrap: "nowrap" }}
+    >
+      {/* <Grid item>
+        <Paper square>
           <form
             action="."
             onSubmit={(e) => {
               e.preventDefault();
-              addRoom(newRoom);
+              Store.addRoom(newRoom);
               setNewRoom("");
             }}
           >
@@ -50,7 +47,7 @@ const Navbar = observer(({ Store }) => {
             </label>
           </form>
         </Paper>
-      </Grid>
+      </Grid> */}
       <Grid
         item
         style={{
@@ -63,17 +60,48 @@ const Navbar = observer(({ Store }) => {
             height: "100%",
             width: "100%",
             display: "table",
+            borderRight: "1px solid rgba(255, 255, 255, 0.12)",
           }}
           elevation={0}
-          variant="outlined"
+          square
         >
-          {rooms.map((room) => (
-            <Typography key={rooms.indexOf(room)}>
-              <Link onClick={() => changeRoom(room.roomId)}>
-                {room.roomName}
-              </Link>
-            </Typography>
-          ))}
+          <div
+            style={{
+              display: "table-cell",
+            }}
+          >
+            {Store.rooms.map((room, key) => (
+              <ListItem
+                onClick={() => Store.changeRoom(room.roomId)}
+                style={{ paddingLeft: 0 }}
+                button
+                disableRipple
+                component={Link}
+                key={Store.rooms.indexOf(room)}
+                divider
+                className={
+                  key + 1 === Store.currentRoom ? classes.selected : ""
+                }
+              >
+                <Grid container direction="row">
+                  <Grid
+                    item
+                    container
+                    alignItems="center"
+                    justify="center"
+                    style={{ width: "50px", flexBasis: "50px" }}
+                  >
+                    <AccountCircleIcon fontSize="large" />
+                  </Grid>
+                  <Hidden smDown>
+                    <Grid item style={{ height: "calc(100% - 50px)" }}>
+                      <ListItemText primary={room.roomName} />
+                    </Grid>
+                  </Hidden>
+                </Grid>
+              </ListItem>
+            ))}
+          </div>
         </Paper>
       </Grid>
     </Grid>
