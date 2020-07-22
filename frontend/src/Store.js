@@ -6,13 +6,35 @@ function Store() {
   this.messages = {};
   this.currentMessages = [];
   this.currentRoom = "";
+  this.namePopupShow = true;
+  this.isDarkMode = true;
+  this.isGeneralSettingsOpen = false;
+  this.isPersonalSettingsOpen = false;
   this.rooms = [
     { roomName: "room1", roomId: 1 },
     { roomName: "room2", roomId: 2 },
     { roomName: "room3", roomId: 3 },
   ];
 
-  this.namePopupShow = true;
+  this.closeGeneralSettingsOpen = () => {
+    this.isGeneralSettingsOpen = false;
+  };
+
+  this.closePersonalSettingsOpen = () => {
+    this.isPersonalSettingsOpen = false;
+  };
+
+  this.toggleDarkMode = () => {
+    this.isDarkMode = !this.isDarkMode;
+  };
+
+  this.toggleGeneralSettingsOpen = () => {
+    this.isGeneralSettingsOpen = !this.isGeneralSettingsOpen;
+  };
+
+  this.togglePersonalSettingsOpen = () => {
+    this.isPersonalSettingsOpen = !this.isPersonalSettingsOpen;
+  };
 
   this.setNickName = (nickName) => {
     this.nickName = nickName;
@@ -52,10 +74,18 @@ decorate(Store, {
   changeRoom: action,
   addMessage: action,
   setMessage: action,
+  setNickName: action,
   addRoom: action,
   toggleNamePopupShow: action,
-  setNickName: action,
+  toggleGeneralSettingsOpen: action,
+  togglePersonalSettingsOpen: action,
+  toggleDarkMode: action,
+  closeGeneralSettingsOpen: action,
+  closePersonalSettingsOpen: action,
   currentMessages: observable,
+  isDarkMode: observable,
+  isGeneralSettingsOpen: observable,
+  isPersonalSettingsOpen: observable,
   nickName: observable,
   currentRoom: observable,
   messages: observable,

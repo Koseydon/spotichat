@@ -48,6 +48,7 @@ const Navbar = observer(({ Store }) => {
           </form>
         </Paper>
       </Grid> */}
+
       <Grid
         item
         style={{
@@ -60,7 +61,6 @@ const Navbar = observer(({ Store }) => {
             height: "100%",
             width: "100%",
             display: "table",
-            borderRight: "1px solid rgba(255, 255, 255, 0.12)",
           }}
           elevation={0}
           square

@@ -57,12 +57,13 @@ const Chat = observer(({ Store }) => {
         }}
       >
         <Paper
+          square
+          elevation={0}
           style={{
             height: "100%",
             width: "100%",
             display: "table",
           }}
-          elevation={0}
         >
           <div
             style={{
@@ -78,7 +79,11 @@ const Chat = observer(({ Store }) => {
         </Paper>
       </Grid>
       <Grid item>
-        <Paper square style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+        <Paper
+          elevation={0}
+          square
+          style={{ paddingTop: "10px", paddingBottom: "10px" }}
+        >
           <ChatInput
             ws={ws}
             onSubmitMessage={(messageString) => submitMessage(messageString)}

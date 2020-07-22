@@ -10,7 +10,7 @@ function App({ name, message }) {
           <strong>{name}</strong>
         </Grid>
         <Grid item>
-          <em>{message}</em>
+          <>{message}</>
         </Grid>
       </Grid>
     </div>

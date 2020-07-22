@@ -5,7 +5,7 @@
 /frontend/.DS_Store
 /backend/node_modules
 /backend/.DS_Store
-
+/build
 
 # local env files
 .env.local
